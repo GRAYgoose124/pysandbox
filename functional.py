@@ -35,7 +35,7 @@ def partial(*pargs, **pkwargs):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            return Partial(func, *pargs, **pkwargs)(*args, **kwargs)
+            return Partial(func, *(*pargs, *args), **{**pkwargs, **kwargs})
         return wrapper()
     return decorator
 
@@ -50,6 +50,7 @@ def partial_test():
 
     a = Partial(mysum)
     print('a', a)
+    print('a()', a())
     print('a(2)', a(2))
     print('a(2)(2)', a(2)(2))
     print('a(2, 2)', a(2, 2))
@@ -61,9 +62,9 @@ def partial_test():
 
 
 def partial_map_test():
-    x = partial_map(lambda x, y: y + x * x, range(10))
-    print([pe(i) for i, pe in enumerate(x)])
+    x = partial_map(lambda x, y, z: x - y + z, range(10, 1, -1))
+    print([pe(i)()(1) for i, pe in enumerate(x)])
 
 partial_test()
-#partial_map_test()
+partial_map_test()
    
